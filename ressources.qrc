@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/mario">
+        <file alias="coeur">coeur.png</file>
+        <file alias="tails">tails.png</file>
+        <file alias="pic1">pic.png</file>
+        <file alias="pic">pic1.png</file>
+        <file alias="1D">1D.png</file>
+        <file alias="1G">1G.png</file>
+        <file alias="2D">2D.png</file>
+        <file alias="2G">2G.png</file>
+        <file alias="plate1">plateforme.png</file>
+        <file alias="fond1">fond.png</file>
+        <file alias="plate">plate1.png</file>
+        <file alias="fond">8bitforet.jpg</file>
+        <file alias="ring1">ring1.png</file>
+        <file alias="ring2">ring2.png</file>
+        <file alias="ring3">ring3.png</file>
+        <file alias="ring4">ring4.png</file>
+    </qresource>
+</RCC>
