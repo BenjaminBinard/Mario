@@ -15,17 +15,17 @@ MainWindow::MainWindow() : QMainWindow(){
     // exemple de création d'un menu
     menuFichier = menuBar()->addMenu(tr("&Fichier"));
 
-    /*MyScene * myscene = new MyScene(this);
+    MyScene * myscene = new MyScene(this);
     myview=new QGraphicsView(myscene, this);
-    qbl_general->addWidget(myview);*/
-    menu * Menu = new menu(this);
-    myview=new QGraphicsView(Menu, this);
     qbl_general->addWidget(myview);
+    /*menu * Menu = new menu(this);
+    myview=new QGraphicsView(Menu, this);
+    qbl_general->addWidget(myview);*/
 
     myview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     myview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //myscene->setBackgroundBrush(QImage(":/mario/fond"));
-    Menu->setBackgroundBrush(QImage(":/mario/fond"));
+    myscene->setBackgroundBrush(QImage(":/mario/fond"));
+    //Menu->setBackgroundBrush(QImage(":/mario/fond"));
 }
 
 MainWindow::~MainWindow(){

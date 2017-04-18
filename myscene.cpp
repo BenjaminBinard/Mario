@@ -1,7 +1,7 @@
 #include "myscene.h"
 #include<QPushButton>
 
-MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(700), hauteur(500){
+MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(600), hauteur(1500){
 
     //----- Creation fenetre -----
     QGraphicsRectItem * qgri = new QGraphicsRectItem(0,0,largeur,hauteur);
@@ -28,27 +28,33 @@ MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(700), hauteur(
     //mario->setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     mario->setScale(2);
     mario->setOffset(0,0);
-    mario->setPos(25, 200);
+    mario->setPos(SPAWN_X, hauteur-(MARIO+LARG_PLATE));
     this->addItem(mario);
 
     //----- Creation Pic -----
-    pic = new QGraphicsPixmapItem(QPixmap(":/mario/pic"));
-    //pic->setBrush(QBrush(QColor(159,232,85)));
-    pic->setPos(210, 0);
-    //pic->setScale(2);
-    //pic->setTransformations();
-    this->addItem(pic);
+    int x1, y1;
+    for(int i=0; i<NBR_PIC;i++){
+        QGraphicsPixmapItem * pic1; //On créé autant d'objet que nécéssaire
+        pic1 = new QGraphicsPixmapItem(QPixmap(":/mario/pic"));
+        pic1->setScale(0.8);
+        y1 = rand() % (hauteur);
+        x1 = rand() % (largeur);
+        qDebug()<<x1<<y1;
+        pic1->setPos(x1,y1);
+        this->addItem(pic1);
+        pic.push_back(pic1);//On ajoute cet objet au vecteur plateforme
+    }
 
     //----- Creation Flag -----
     flag = new QGraphicsPixmapItem(QPixmap(":/mario/ring1"));
     //flag->setBrush(QBrush(QColor(159,272,85)));
-    flag->setPos(430, hauteur-FLAG);
+    flag->setPos(430, FLAG);
     flag->setScale(0.3);
     this->addItem(flag);
     pas_anneau=0;
 
     //----- Vecteur plateforme -----
-    nbr_plate=4;// Nombre de plateforme
+    nbr_plate=7;// Nombre de plateforme
     for(int i=0; i<nbr_plate;i++){
         QGraphicsPixmapItem * plateforme1; //On créé autant d'objet que nécéssaire
         plateforme1 = new QGraphicsPixmapItem(QPixmap(":/mario/plate"));
@@ -58,10 +64,14 @@ MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(700), hauteur(
         this->addItem(plateforme1);
         plateforme.push_back(plateforme1);//On ajoute cet objet au vecteur plateforme
     }
-    plateforme.at(0)->setPos(150, 450);//On rentre manuellement la position. Plus tard l'idéal serait d'avoir un hasard.
-    plateforme.at(1)->setPos(350, 380);
-    plateforme.at(2)->setPos(450, 280);
-    plateforme.at(3)->setPos(150, 200);
+    plateforme.at(0)->setPos(50, hauteur-10);//On rentre manuellement la position. Plus tard l'idéal serait d'avoir un hasard.
+    plateforme.at(4)->setPos(150, hauteur-100);
+    plateforme.at(5)->setPos(250, hauteur-170);
+    plateforme.at(6)->setPos(350, hauteur-240);
+    plateforme.at(1)->setPos(450, hauteur-310);
+    plateforme.at(2)->setPos(490, hauteur-380);
+    plateforme.at(3)->setPos(450, hauteur-450);
+
 
     //----- Creation Vie -----
     vie=5;
@@ -70,25 +80,21 @@ MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(700), hauteur(
         coeur = new  QGraphicsPixmapItem(QPixmap(":/mario/coeur"));
         //coeur->setBrush(QBrush(QColor(159,232,85)));
         this->addItem(coeur);
-        coeur->setScale(0.05);
+        coeur->setScale(0.03);
         etat.push_back(coeur);//On ajoute cet objet au vecteur plateforme
-    }
-    for(int j=0;j<vie;j++){
-        //qDebug()<<vie;
-        etat.at(j)->setPos(j*40,5);
     }
 
     //----- Textes -----
 
     gagne = new QGraphicsTextItem("gagne !");
-    gagne->setScale(3);
+    gagne->setScale(2);
     gagne->setDefaultTextColor(Qt::white);
     gagne->setVisible(false);
     gagne->setPos(0,0);
     this->addItem(gagne);
 
-    perdu = new QGraphicsTextItem("Appuyer sur espace pour recommencer");
-    perdu->setScale(3);
+    perdu = new QGraphicsTextItem("Appuyer sur espace \n pour recommencer");
+    perdu->setScale(2);
     perdu->setDefaultTextColor(Qt::white);
     perdu->setVisible(false);
     perdu->setPos(0,0);
@@ -107,8 +113,6 @@ void MyScene::update(){
     int yp;
     QList <QGraphicsView*> ListeView = this->views();
     ListeView.at(0)->centerOn(mario);
-    //int longu=mario->
-    //qDebug()<<"x : "<<x<<"et y : "<<y;
     bool ne_pas_rentrer=false;
     //----- Collision plateforme -----
     for(int i=0;i<nbr_plate;i++){
@@ -125,13 +129,13 @@ void MyScene::update(){
                 on_descend=true;
                 gauche=false;
             }
-            qDebug()<<y<<yp+LARG_PLATE;
+            //qDebug()<<y<<yp+LARG_PLATE;
             if(y+8==yp+LARG_PLATE){ // On ne peut pas traverser les plafons
                 on_descend=true;
-                qDebug()<<"ECHOOOO";
+                //qDebug()<<"ECHOOOO";
             }else{
                 on_descend=false;
-
+                compteur=0;
                 ne_pas_rentrer=true;
             }
         }
@@ -152,23 +156,33 @@ void MyScene::update(){
     else if(ne_pas_rentrer==false){
         on_descend=true;
     }
+    //----- Affichage de la vie -----
+    for(int j=0;j<vie;j++){
+        //qDebug()<<vie;
+        etat.at(j)->setPos((j*27)+x-10,y-50);
+    }
     //----- Gestion de la vie -----
-    if(mario->collidesWithItem(pic)==true){
-        //qDebug()<<x-20<<x;
-        on_descend=true;
-        //mario->setPos(0,200);
-        vie=vie-1;
-        etat.at(vie)->setVisible(false);
-        pic->setPos(0,0);
-        pic->setVisible(false);
-        if(vie==0){
-            qDebug()<<"PERDU. Appuyer sur espace pour recommencer.";
-            perdu->setVisible(true);
-            timer->stop();
+    for(int i=0; i<NBR_PIC;i++){
+        if(mario->collidesWithItem(pic.at(i))==true){
+            //qDebug()<<x-20<<x;
+            on_descend=true;
+            //mario->setPos(0,200);
+            vie=vie-1;
+            etat.at(vie)->setVisible(false);
+            pic.at(i)->setPos(0,0);
+            pic.at(i)->setVisible(false);
+            if(vie==0){
+                qDebug()<<"PERDU. Appuyer sur espace pour recommencer.";
+                perdu->setPos(x-100,y-100);
+                perdu->setVisible(true);
+                timer->stop();
+            }
         }
     }
+
     //----- C'est Gagné ! -----
     if(mario->collidesWithItem(flag)==true){
+        gagne->setPos(x-50,y);
         gagne->setVisible(true);
         timer->stop();
     }
@@ -224,6 +238,7 @@ void MyScene::update(){
         if(y+vitesse>hauteur-MARIO){ // Mais on ne peux pas descendre plus bas que terre
             on_descend=false;
             compteur=0;
+            mario->setPos(SPAWN_X,hauteur-(MARIO+LARG_PLATE));
         }
         else{
             mario->setY(y+2*vitesse);

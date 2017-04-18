@@ -3,7 +3,7 @@
         <file alias="coeur">coeur.png</file>
         <file alias="tails">tails.png</file>
         <file alias="pic1">pic.png</file>
-        <file alias="pic">pic1.png</file>
+        <file alias="pic2">pic1.png</file>
         <file alias="1D">1D.png</file>
         <file alias="1G">1G.png</file>
         <file alias="2D">2D.png</file>
@@ -16,5 +16,6 @@
         <file alias="ring2">ring2.png</file>
         <file alias="ring3">ring3.png</file>
         <file alias="ring4">ring4.png</file>
+        <file alias="pic">spike.png</file>
     </qresource>
 </RCC>

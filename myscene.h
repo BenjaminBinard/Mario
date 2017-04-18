@@ -14,12 +14,15 @@
 #include<QKeyEvent>
 #include<vector>
 #include <iostream>
+#include <stdlib.h>
 
 #define MARIO 35*2
-#define PIC 20
+#define PIC 57*0.8
 #define LONG_PLATE 60*2
 #define LARG_PLATE 16*2
 #define FLAG 128*0.3
+#define SPAWN_X 25
+#define NBR_PIC 30
 
 class MyScene:public QGraphicsScene{
     Q_OBJECT
@@ -27,6 +30,7 @@ public:
     MyScene(QObject *parent=0);
     std::vector<QGraphicsPixmapItem *> plateforme;
     std::vector<QGraphicsPixmapItem *> etat;
+    std::vector<QGraphicsPixmapItem *> pic;
 public slots:
     void update();
 protected:
@@ -35,7 +39,7 @@ protected:
 private:
     QTimer * timer;
     //QGraphicsRectItem * mario;
-    QGraphicsPixmapItem * pic;
+    //QGraphicsPixmapItem * pic;
     QGraphicsPixmapItem * flag;
     QGraphicsTextItem * gagne;
     QGraphicsTextItem * perdu;

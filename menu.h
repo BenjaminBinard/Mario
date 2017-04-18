@@ -1,4 +1,4 @@
-#ifndef MENU_H
+/*#ifndef MENU_H
 #define MENU_H
 
 #include<QWidget>
@@ -21,3 +21,4 @@ private:
 
 
 #endif // MENU_H
+*/
