@@ -5,76 +5,58 @@ MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(600), hauteur(
 
     //----- Creation fenetre -----
     QGraphicsRectItem * qgri = new QGraphicsRectItem(0,0,largeur,hauteur);
-    qgri->setPen(QPen(Qt::black));
     this->addItem(qgri);
-
-    //----- Creation Mario -----
-    /*mario = new QGraphicsRectItem(0,0,MARIO,MARIO);
-    mario->setBrush(QColor(139,0,0));
-    mario->setPos(30, hauteur-MARIO);
-    this->addItem(mario);*/
-    compteur=0;
-    on_descend=true;
-    droite=true;
-    gauche=true;
-    vitesse=1;
-    hauteur_max=100;
-    pas=0;
 
     //----- Creation Tails -----
     mario = new  QGraphicsPixmapItem(QPixmap(":/mario/1D"));
-    //mario->setBrush(QBrush(Qt::white));
     mario->opaqueArea();
-    //mario->setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     mario->setScale(2);
     mario->setOffset(0,0);
-    mario->setPos(SPAWN_X, hauteur-(MARIO+LARG_PLATE));
+
     this->addItem(mario);
 
     //----- Creation Pic -----
-    int x1, y1;
     for(int i=0; i<NBR_PIC;i++){
         QGraphicsPixmapItem * pic1; //On créé autant d'objet que nécéssaire
         pic1 = new QGraphicsPixmapItem(QPixmap(":/mario/pic"));
         pic1->setScale(0.8);
-        y1 = rand() % (hauteur);
-        x1 = rand() % (largeur);
-        qDebug()<<x1<<y1;
-        pic1->setPos(x1,y1);
         this->addItem(pic1);
         pic.push_back(pic1);//On ajoute cet objet au vecteur plateforme
     }
 
     //----- Creation Flag -----
     flag = new QGraphicsPixmapItem(QPixmap(":/mario/ring1"));
-    //flag->setBrush(QBrush(QColor(159,272,85)));
     flag->setPos(430, FLAG);
     flag->setScale(0.3);
     this->addItem(flag);
     pas_anneau=0;
 
     //----- Vecteur plateforme -----
-    nbr_plate=7;// Nombre de plateforme
-    for(int i=0; i<nbr_plate;i++){
+    for(int i=0; i<NBR_PLATE;i++){
         QGraphicsPixmapItem * plateforme1; //On créé autant d'objet que nécéssaire
         plateforme1 = new QGraphicsPixmapItem(QPixmap(":/mario/plate"));
-        //plateforme1->setBrush(QBrush(QColor(159,232,85)));
         plateforme1->setScale(2);
-        //plateforme1->setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
         this->addItem(plateforme1);
         plateforme.push_back(plateforme1);//On ajoute cet objet au vecteur plateforme
     }
-    plateforme.at(0)->setPos(50, hauteur-10);//On rentre manuellement la position. Plus tard l'idéal serait d'avoir un hasard.
-    plateforme.at(4)->setPos(150, hauteur-100);
-    plateforme.at(5)->setPos(250, hauteur-170);
-    plateforme.at(6)->setPos(350, hauteur-240);
-    plateforme.at(1)->setPos(450, hauteur-310);
-    plateforme.at(2)->setPos(490, hauteur-380);
-    plateforme.at(3)->setPos(450, hauteur-450);
+    plateforme.at(0)->setPos(50, hauteur-10);
+    if(PSEUDO_ALEA==0){
+        plateforme.at(4)->setPos(150, hauteur-100);
+        plateforme.at(5)->setPos(250, hauteur-170);
+        plateforme.at(6)->setPos(350, hauteur-240);
+        plateforme.at(1)->setPos(450, hauteur-310);
+        plateforme.at(2)->setPos(490, hauteur-380);
+        plateforme.at(3)->setPos(450, hauteur-450);
+
+    }else if(PSEUDO_ALEA==1){ // Car je suis faineant
+        for(int i=1; i<NBR_PLATE;i++){
+            plateforme.at(i)->setPos(rand()%(largeur), rand()%(hauteur));
+        }
+    }
 
 
     //----- Creation Vie -----
-    vie=5;
+    vie=VIE;
     for(int i=0;i<vie;i++){
         QGraphicsPixmapItem * coeur; //On créé autant d'objet que nécéssaire
         coeur = new  QGraphicsPixmapItem(QPixmap(":/mario/coeur"));
@@ -103,7 +85,8 @@ MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(600), hauteur(
     //----- Generation Timer -----
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(7);
+
+    initialiser_jeu();
 }
 
 void MyScene::update(){
@@ -115,7 +98,7 @@ void MyScene::update(){
     ListeView.at(0)->centerOn(mario);
     bool ne_pas_rentrer=false;
     //----- Collision plateforme -----
-    for(int i=0;i<nbr_plate;i++){
+    for(int i=0;i<NBR_PLATE;i++){
         xp=plateforme.at(i)->x();
         yp=plateforme.at(i)->y();
 
@@ -167,16 +150,9 @@ void MyScene::update(){
             //qDebug()<<x-20<<x;
             on_descend=true;
             //mario->setPos(0,200);
-            vie=vie-1;
-            etat.at(vie)->setVisible(false);
             pic.at(i)->setPos(0,0);
             pic.at(i)->setVisible(false);
-            if(vie==0){
-                qDebug()<<"PERDU. Appuyer sur espace pour recommencer.";
-                perdu->setPos(x-100,y-100);
-                perdu->setVisible(true);
-                timer->stop();
-            }
+            degat(x,y);
         }
     }
 
@@ -187,18 +163,15 @@ void MyScene::update(){
         timer->stop();
     }
     //----- Deplacements gauche et droite -----
-    if(keyD && x<largeur-MARIO && droite==true){
+    if(keyD && droite==true){
         mario->setX(x+vitesse);// A gauche on se deplace
         gauche=true;//Si on avance, on se decolle du mur, donc on peux aller a gauche
         sens_droite=true;
-        //mario->setPixmap(QPixmap(":/mario/1D"));
-        //qDebug()<<pas;
     }
-    if(keyQ && x>0 && gauche==true){
+    if(keyQ && gauche==true){
         mario->setX(x-vitesse);//A droite on se deplace
         sens_droite=false;
         droite=true;
-        //mario->setPixmap(QPixmap(":/mario/1G"));
     }
     //---- Helicoptère -----
     if(pas<5){
@@ -239,6 +212,7 @@ void MyScene::update(){
             on_descend=false;
             compteur=0;
             mario->setPos(SPAWN_X,hauteur-(MARIO+LARG_PLATE));
+            degat(x,y);
         }
         else{
             mario->setY(y+2*vitesse);
@@ -262,6 +236,7 @@ void MyScene::keyPressEvent(QKeyEvent *event){
     }
     if(key==Qt::Key_Space){
         qDebug()<<"On rejoue";
+        initialiser_jeu();
     }
 }
 
@@ -276,5 +251,40 @@ void MyScene::keyReleaseEvent(QKeyEvent *event){
     }
     if(key==Qt::Key_Q ){
         keyQ=false;
+    }
+}
+
+void MyScene::initialiser_jeu(){
+    qDebug()<<"Ca passe";
+    compteur=0;
+    on_descend=true;
+    droite=true;
+    gauche=true;
+    vitesse=1;
+    hauteur_max=100;
+    pas=0;
+    mario->setPos(SPAWN_X, hauteur-(MARIO+LARG_PLATE));
+    vie=VIE;
+    for(int i=0;i<VIE;i++){
+        etat.at(i)->setVisible(true);
+    }
+    int y1,x1;
+    for(int i=0;i<NBR_PIC;i++){
+        y1 = rand() % (hauteur);
+        x1 = rand() % (largeur);
+        pic.at(i)->setPos(x1,y1);
+        pic.at(i)->setVisible(true);
+    }
+    timer->start(7);
+}
+
+void MyScene::degat(int x, int y){ //Permet de faire perdre 1 coeur à Tail
+    vie--;
+    etat.at(vie)->setVisible(false);
+    if(vie==0){
+        qDebug()<<"PERDU. Appuyer sur espace pour recommencer.";
+        perdu->setPos(x-100,y-100);
+        perdu->setVisible(true);
+        timer->stop();
     }
 }

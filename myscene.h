@@ -23,6 +23,9 @@
 #define FLAG 128*0.3
 #define SPAWN_X 25
 #define NBR_PIC 30
+#define VIE 5
+#define PSEUDO_ALEA 1
+#define NBR_PLATE 27
 
 class MyScene:public QGraphicsScene{
     Q_OBJECT
@@ -31,6 +34,8 @@ public:
     std::vector<QGraphicsPixmapItem *> plateforme;
     std::vector<QGraphicsPixmapItem *> etat;
     std::vector<QGraphicsPixmapItem *> pic;
+    void initialiser_jeu();
+    void degat(int x, int y);
 public slots:
     void update();
 protected:
@@ -47,7 +52,6 @@ private:
     const int largeur;
     const int hauteur;
     int hauteur_max;
-    int nbr_plate;
     int vitesse;
     int vie;
     int compteur;
