@@ -1,7 +1,8 @@
-#include "mainwindow.h"
+#include "mainwindow2.h"
 #include "myscene.h"
+#include "menu.h"
 
-MainWindow::MainWindow() : QMainWindow(){
+MainWindow2::MainWindow2() : QMainWindow(){
     // le widget dans lequel tout s'affiche
     widget_general = new QWidget;
     QHBoxLayout * qbl_general = new QHBoxLayout;
@@ -15,10 +16,8 @@ MainWindow::MainWindow() : QMainWindow(){
     myview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     myview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     myscene->setBackgroundBrush(QImage(":/mario/fond"));
-    //Menu->setBackgroundBrush(QImage(":/mario/tails"));
 }
 
-MainWindow::~MainWindow(){
+MainWindow2::~MainWindow2(){
 
 }
-

@@ -17,5 +17,9 @@
         <file alias="ring3">ring3.png</file>
         <file alias="ring4">ring4.png</file>
         <file alias="pic">spike.png</file>
+        <file alias="icon">favicon.ico</file>
+        <file alias="comment_jouer">comment_jouer.png</file>
+        <file alias="gagne">gagne.png</file>
+        <file alias="perdu">perdu.png</file>
     </qresource>
 </RCC>

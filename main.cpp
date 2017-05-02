@@ -5,6 +5,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+    a.setWindowIcon(QIcon(":/mario/icon"));
     w.setFixedSize(600,600);
     w.show();
 

@@ -15,6 +15,7 @@
 #include<vector>
 #include <iostream>
 #include <stdlib.h>
+#include <QPushButton>
 
 #define MARIO 35*2
 #define PIC 57*0.8
@@ -23,9 +24,11 @@
 #define FLAG 128*0.3
 #define SPAWN_X 25
 #define NBR_PIC 30
-#define VIE 5
+#define VIE 10
 #define PSEUDO_ALEA 1
 #define NBR_PLATE 27
+#define LARG_FRAME 500 //Largeur et hauteur des images texte
+#define LONG_FRAME 416
 
 class MyScene:public QGraphicsScene{
     Q_OBJECT
@@ -36,19 +39,24 @@ public:
     std::vector<QGraphicsPixmapItem *> pic;
     void initialiser_jeu();
     void degat(int x, int y);
+    void pre_init();
 public slots:
     void update();
+    void btn_jouer();
+    void btn_aide();
+    void btn_quitter();
+    void btn_recommencer();
+    void btn_menu();
 protected:
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
 private:
     QTimer * timer;
-    //QGraphicsRectItem * mario;
-    //QGraphicsPixmapItem * pic;
     QGraphicsPixmapItem * flag;
-    QGraphicsTextItem * gagne;
-    QGraphicsTextItem * perdu;
+    QGraphicsPixmapItem * gagne;
+    QGraphicsPixmapItem * perdu;
     QGraphicsPixmapItem * mario;
+    QGraphicsPixmapItem * aide_image;
     const int largeur;
     const int hauteur;
     int hauteur_max;
@@ -62,6 +70,10 @@ private:
     bool sens_droite;
     bool on_descend;
     bool keyZ,keyD,keyQ;
+    QPushButton *jouer;
+    QPushButton *quitter;
+    QPushButton *aide;
+    QPushButton *recommencer;
 };
 
 #endif // MYSCENE_H

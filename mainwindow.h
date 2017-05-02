@@ -13,7 +13,6 @@ public:
     ~MainWindow();
 private:
     QWidget * widget_general;
-    QMenu * menuFichier;
     QGraphicsView * myview;
 };
 

@@ -1,0 +1,7 @@
+        Relx=Relx+1;
+        Rely=(-0.04*(Relx*Relx)+100);
+        qDebug() << Rely<<Relx;
+        x=x+Relx+50;
+        y=y+Rely;
+        mario->setY(y);
+        mario->setX(x);
