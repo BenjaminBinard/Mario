@@ -12,7 +12,6 @@ void MyScene::keyPressEvent(QKeyEvent *event){
         keyQ=true;
     }
     if(key==Qt::Key_Space){
-        qDebug()<<"On rejoue";
         initialiser_jeu();
     }
 }
@@ -21,7 +20,7 @@ void MyScene::keyReleaseEvent(QKeyEvent *event){
     int key = event->key();
     if(key==Qt::Key_Z){
         keyZ=false;
-        on_descend=true;//On relache la touche de saut, donc on descend. Dependante du timer
+        on_descend=true;//On relache la touche de saut, donc on descend. Dependante au timer
     }
     if(key==Qt::Key_D){
         keyD=false;

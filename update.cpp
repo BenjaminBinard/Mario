@@ -5,9 +5,13 @@ void MyScene::update(){
     int y=mario->y();
     int xp;
     int yp;
+
+    //----- Gestion de la vue -----
     QList <QGraphicsView*> ListeView = this->views();
     ListeView.at(0)->centerOn(mario);
-    bool ne_pas_rentrer=false;
+
+    bool ne_pas_rentrer=false; //Sous entendu "ne pas rentrer dans la fonction update la prochaine fois"
+
     //----- Collision plateforme -----
     for(int i=0;i<NBR_PLATE;i++){
         xp=plateforme.at(i)->x();
@@ -55,20 +59,20 @@ void MyScene::update(){
     for(int i=0; i<NBR_PIC;i++){
         if(mario->collidesWithItem(pic.at(i))==true){
             on_descend=true;
-            pic.at(i)->setPos(0,0);
+            pic.at(i)->setPos(0,0);//On enleve le pic et le rend invisible sans le desinstencier
             pic.at(i)->setVisible(false);
-            degat(x,y);
+            degat(x,y,ListeView);// Mario perd 1 coeur
         }
     }
 
     //----- C'est Gagné ! -----
     if(mario->collidesWithItem(flag)==true){
-        qDebug()<<"gagne. Appuyer sur espace pour recommencer.";
-        gagne->setPos(x-(LONG_FRAME*0.7/2),y-(LARG_FRAME*0.7/2));
+        qDebug()<<"gagné. Appuyer sur espace pour recommencer.";
+        gagne->setPos(x-(LONG_FRAME*0.7/2),y-(LARG_FRAME*0.7/2));// On essaye de mettre le plus au centre de la fenetre possible
         gagne->setVisible(true);
         recommencer->setVisible(true);
-        recommencer->move(x-(200/2)+20,y+(50/2));
-        for(int i=0;i<NBR_PIC;i++){
+        recommencer->move(x-(200/2)+20,y+(50/2));//Meme chose pour le bouton recommencer
+        for(int i=0;i<NBR_PIC;i++){ // On rend invisble tout le reste
             pic.at(i)->setVisible(false);
         }
         for(int i=0;i<NBR_PLATE;i++){
@@ -129,7 +133,7 @@ void MyScene::update(){
             on_descend=false;
             compteur=0;
             mario->setPos(SPAWN_X,hauteur-(MARIO+LARG_PLATE));
-            degat(x,y);
+            degat(x,y, ListeView);
         }
         else{
             mario->setY(y+2*vitesse);

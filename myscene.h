@@ -38,7 +38,7 @@ public:
     std::vector<QGraphicsPixmapItem *> etat;
     std::vector<QGraphicsPixmapItem *> pic;
     void initialiser_jeu();
-    void degat(int x, int y);
+    void degat(int x, int y, QList<QGraphicsView *> ListeView);
     void pre_init();
 public slots:
     void update();

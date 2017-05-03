@@ -2,20 +2,22 @@
 
 MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(600), hauteur(1500){
 
-    jouer = new QPushButton("Jouer");
+    //----- Creation des boutons du menu -----
+
+    jouer = new QPushButton("Jouer"); //Bouton pour lancer le jeu
     jouer->setGeometry(QRect(QPoint(100, 100),QSize(200, 50)));
     jouer->move(100,100);
     this->addWidget(jouer);
     connect(jouer, SIGNAL (released()),this, SLOT (btn_jouer()));
 
-    quitter=new QPushButton("Retour");
+    quitter=new QPushButton("Retour"); //Bouton pour revenir sur le menu depuis l'aide
     quitter->setGeometry(QRect(QPoint(100, 100),QSize(200, 50)));
     quitter->move(100,400);
     quitter->setVisible(false);
     connect(quitter, SIGNAL (released()),this, SLOT (btn_quitter()));
     this->addWidget(quitter);
 
-    aide=new QPushButton("Aide ?");
+    aide=new QPushButton("Aide ?"); //Ouvrir l'aide
     aide->setGeometry(QRect(QPoint(100, 100),QSize(200, 50)));
     aide->move(100,200);
     connect(aide, SIGNAL (released()),this, SLOT (btn_aide()));
@@ -31,35 +33,35 @@ MyScene::MyScene(QObject *parent):QGraphicsScene(parent), largeur(600), hauteur(
 
 }
 
-void MyScene::initialiser_jeu(){
-    compteur=0;
-    on_descend=true;
-    droite=true;
+void MyScene::initialiser_jeu(){// On initialise le jeu (peu etre appelé autant de fois que nécéssaire)
+    compteur=0;// Le nombre d'itérations du saut est mis/remis à 0
+    on_descend=true; //La gravité est activée
+    droite=true; //Mario à le droit d'aller à droite ou à gauche
     gauche=true;
-    vitesse=1;
-    hauteur_max=100;
+    vitesse=1; // On definit sa vitesse
+    hauteur_max=100; //La hauteur maximale du saut
     pas=0;
-    mario->setPos(SPAWN_X, hauteur-(MARIO+50));
-    vie=VIE;
+    mario->setPos(SPAWN_X, hauteur-(MARIO+50));// On met mario aux debut du parcour
+    vie=VIE; //on initialise/réinitialise la vie
     for(int i=0;i<VIE;i++){
         etat.at(i)->setVisible(true);
     }
     int y1,x1;
-    for(int i=0;i<NBR_PIC;i++){
+    for(int i=0;i<NBR_PIC;i++){ //On distribue de manière purement aléatoire les pics
         y1 = rand() % (hauteur);
         x1 = rand() % (largeur);
         pic.at(i)->setPos(x1,y1);
         pic.at(i)->setVisible(true);
     }
-    for(int i=0;i<NBR_PLATE;i++){
+    for(int i=0;i<NBR_PLATE;i++){// On rend visible les plateformes et autre
         plateforme.at(i)->setVisible(true);
     }
     mario->setVisible(true);
     flag->setVisible(true);
-    timer->start(7);
+    timer->start(7);// On lance le jeu
 }
 
-void MyScene::pre_init(){
+void MyScene::pre_init(){// Pre initialisation du jeu, est lancée une seule fois
 
     //----- Creation Tails -----
     mario = new  QGraphicsPixmapItem(QPixmap(":/mario/1D"));
@@ -101,7 +103,8 @@ void MyScene::pre_init(){
         plateforme.at(2)->setPos(490, hauteur-380);
         plateforme.at(3)->setPos(450, hauteur-450);
 
-    }else if(PSEUDO_ALEA==1){ // Car je suis faineant
+    }else if(PSEUDO_ALEA==1){ // C'est moins long et moins fastidieux avec cette méthode
+        //(à noter que ce n'est pas pseudo aléatoire mais totalement aléatoire)
         for(int i=1; i<NBR_PLATE;i++){
             plateforme.at(i)->setPos(rand()%(largeur), rand()%(hauteur));
         }
@@ -131,7 +134,7 @@ void MyScene::pre_init(){
     perdu->setPos(0,0);
     this->addItem(perdu);
 
-    recommencer=new QPushButton("Recommencer");
+    recommencer=new QPushButton("Recommencer"); //Création du bouton recommencer
     recommencer->setGeometry(QRect(QPoint(100, 100),QSize(200, 50)));
     recommencer->move(100,200);
     recommencer->setVisible(false);
@@ -144,7 +147,7 @@ void MyScene::pre_init(){
 
 }
 
-void MyScene::btn_jouer(){
+void MyScene::btn_jouer(){ //Lorsque l'utilisateur lance le jeu
     quitter->setVisible(false);
     jouer->setVisible(false);
     aide->setVisible(false);
@@ -152,22 +155,18 @@ void MyScene::btn_jouer(){
     initialiser_jeu();
 }
 
-void MyScene::btn_aide(){
+void MyScene::btn_aide(){// Lorsque l'utilisateur regarde l'aide
     aide_image->setVisible(true);
     quitter->setVisible(true);
 }
 
-void MyScene::btn_quitter(){
+void MyScene::btn_quitter(){// Puis quitte cette aide
     aide_image->setVisible(false);
     quitter->setVisible(false);
 }
 
-void MyScene::btn_recommencer(){
+void MyScene::btn_recommencer(){// On reinitialise le jeu
     recommencer->setVisible(false);
     perdu->setVisible(false);
     initialiser_jeu();
-}
-
-void MyScene::btn_menu(){
-
 }

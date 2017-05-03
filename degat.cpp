@@ -1,6 +1,6 @@
 #include "myscene.h"
 
-void MyScene::degat(int x, int y){ //Permet de faire perdre 1 coeur à Tail
+void MyScene::degat(int x, int y, QList <QGraphicsView*> ListeView){ //Permet de faire perdre 1 coeur à Tail
     vie--;
     etat.at(vie)->setVisible(false);
     if(vie==0){
@@ -17,6 +17,7 @@ void MyScene::degat(int x, int y){ //Permet de faire perdre 1 coeur à Tail
         }
         mario->setVisible(false);
         flag->setVisible(false);
+        ListeView.at(0)->centerOn(perdu);
         timer->stop();
     }
 }

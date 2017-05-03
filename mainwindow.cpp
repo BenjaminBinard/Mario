@@ -15,7 +15,6 @@ MainWindow::MainWindow() : QMainWindow(){
     myview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     myview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     myscene->setBackgroundBrush(QImage(":/mario/fond"));
-    //Menu->setBackgroundBrush(QImage(":/mario/tails"));
 }
 
 MainWindow::~MainWindow(){
