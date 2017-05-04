@@ -46,7 +46,6 @@ public slots:
     void btn_aide();
     void btn_quitter();
     void btn_recommencer();
-    void btn_menu();
 protected:
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);

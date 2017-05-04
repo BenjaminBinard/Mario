@@ -26,7 +26,7 @@ void MyScene::update(){
                 on_descend=true;
                 gauche=false;
             }
-            if(y+8>=yp+LARG_PLATE){ // On ne peut pas traverser les plafons
+            if(y+15>=yp+LARG_PLATE){ // On ne peut pas traverser les plafons
                 on_descend=true;
             }else{
                 on_descend=false;

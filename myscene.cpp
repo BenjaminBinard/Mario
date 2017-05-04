@@ -38,8 +38,8 @@ void MyScene::initialiser_jeu(){// On initialise le jeu (peu etre appelé autant
     on_descend=true; //La gravité est activée
     droite=true; //Mario à le droit d'aller à droite ou à gauche
     gauche=true;
-    vitesse=1; // On definit sa vitesse
-    hauteur_max=100; //La hauteur maximale du saut
+    vitesse=2; // On definit sa vitesse
+    hauteur_max=70; //La hauteur maximale du saut
     pas=0;
     mario->setPos(SPAWN_X, hauteur-(MARIO+50));// On met mario aux debut du parcour
     vie=VIE; //on initialise/réinitialise la vie
@@ -105,8 +105,11 @@ void MyScene::pre_init(){// Pre initialisation du jeu, est lancée une seule foi
 
     }else if(PSEUDO_ALEA==1){ // C'est moins long et moins fastidieux avec cette méthode
         //(à noter que ce n'est pas pseudo aléatoire mais totalement aléatoire)
+        int x1, y1;
         for(int i=1; i<NBR_PLATE;i++){
-            plateforme.at(i)->setPos(rand()%(largeur), rand()%(hauteur));
+            x1=rand()%(largeur);
+            y1=rand()%(hauteur);
+            plateforme.at(i)->setPos(x1, y1);
         }
     }
 
